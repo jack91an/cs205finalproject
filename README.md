@@ -43,6 +43,7 @@ This notebook is ready to be run through. Note that I have already put the excer
 <img src="https://github.com/jack91an/cs205finalproject/blob/master/results.png" width=960/>
 
 We are glad to see that we achieved speedup in both paralellizations.
+
 1. Make fingerprints with multiprocessing
 By applying multiprocessing, we did accomplish a 2x speedup with 4 cores. This is less than linear, which I think is mainly due to overhead costs. We used htop to ensure that all cores are utilized during the run:
 
@@ -57,24 +58,32 @@ In terms of accuracy, both serial and parallel versions achieved a 100% accuracy
 ####Design####
 
 There are two parts of the design:
+
 1. Algorithm
 Before we applied the Shazam-like algorithm, we were using a much less efficient method (byte difference) to compare two soundtracks. This method not only produces huge datafiles to be stored, but is also generally slow.
 After switching to the hash structure, we were able to get more than 10x speedup, and only need to store less than 5% of the original files.
 
 2. Parallelism
 We chose to use multiprocessing to parallelize the finger creation process, because of several reasons:
+
 - This is a one time process. Once the data is read in, it is stored and does not need reloading. Therefore, resources should be spent toward the matching part, and multiprocessing is a simple and effective (2x speedup) solution.
+
 - Several python libraries were used in the process, which makes it hard to get into the package and customize the code (like for Cython).
 
 On the other hand, we decided to explore OpenCL as the tool to parallelize the matching process, as utilizing GPU would speed up the process significantly (700x). Here are some of the details of our OpenCL design:
+
 - Instead of passing the list of (hash, [t1, t2, ...]) tuples into the matching function, we needed to pass fixed-length items and decided to instead pass [(hash, t1), (hash, t2), ...] into the kernal. This step was done outside of the matching function, and takes roughly the same amount of time comparing to making fingerpy rints that are fed into the serial code.
+
 - Another challenge was that in parallel we need to build the "bucket" list, which stores the number of t1 offsets that fall into a particular range. Due to the fixed-length constrained, we split the whole soundtrack time into 200 equally sized buckets, and use a counter to keep track of corresponding number of matches.
 
 ####Next Steps####
 
 There are a few simple functionalities we would like to add to the code but didn't have time to get to:
+
 - The ability to tell what time the excerpt/clip starts in the original movie. This would be a very helpful function, which generally not valuable in song matching.
+
 - We also want to test our methodology on clips where there is no background music but only human speaking, as this is an often scenario for clips people are searching for.
+
 - We would like to explore ways that would decrease the overhead when passing variables into OpenCL. This is currently the bottle neck for better results under the same settings
 
 ####Reflection####
