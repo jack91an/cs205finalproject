@@ -49,7 +49,7 @@
 <p>Here is a quick overview of how Shazam works:
 Any soundtrack is first converted to a 2D map, where the most distinguishable sounds are marked (in the graph below). We use the amplitude of the sound to be the filter, and extract the only time and frequencies of the loudest sounds. This way, the amount of data need to be stored and computed decrease dramatically.</p>
 
-<p><img src="https://github.com/jack91an/cs205finalproject/blob/master/results.png" alt="resultsss"></p>
+<p><img src="cs205finalproject/fp_hash.png" alt="resultsss"></p>
 
 <p><img src="https://github.com/jack91an/cs205finalproject/blob/master/fp_peaks.png" width="480/">
 To store the reduced data, Shazam utilized a "hash" structure. With a pre-defined "window", Shazam computes the difference between the time a sound occurs and each of the later sound that is included in the window. This sound is thereafter (not uniquely) identified as the combination of the frequencies of the two sounds and the time-offset, which we call the "hash". With storing the time that the first sound occurs as an additional variable, now we can construct a set of (hash, t1) pairs, which should be drastically different between two different songs. This set of hash pairs are the fingerprints.
