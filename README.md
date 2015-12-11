@@ -44,12 +44,12 @@ This notebook is ready to be run through. Note that I have already put the excer
 
 We are glad to see that we achieved speedup in both paralellizations.
 
-1. Make fingerprints with multiprocessing
+- Make fingerprints with multiprocessing
 By applying multiprocessing, we did accomplish a 2x speedup with 4 cores. This is less than linear, which I think is mainly due to overhead costs. We used htop to ensure that all cores are utilized during the run:
 
 <img src="https://github.com/jack91an/cs205finalproject/blob/master/htop.png"/>
 
-2. Match hashkeys with OpenCL
+- Match hashkeys with OpenCL
 Using OpenCL, the overall time spent on searching 18 excerpts/recordings over 18 original soundtracks decreased slightly (x0.9). We thing the major costs come from arrays and variables being passed into the kernal. However, if we only time the matching process, we achieved significant speedup, at 600-800 times faster, while maintaining similar levels of accuracy. This is exciting, because as the database scale and in the real life when only 1 clip will be searched to much longer soundtracks, the matching process will take up more weight in the computation time, and the soundtracks' fingerprints won't need to be passed into repetively (which seems to be the case here). Therefore, our speedup is very scalable, and we expect the total time to decrease significantly comparing to the serial scenario when the original soundtracks grow much larger.
 
 In terms of accuracy, both serial and parallel versions achieved a 100% accuracy when the excerpts are matched, which is expected because there is no noise nor deletion in the sound data. When matching recorded clips, both the serial and parallel version are relatively accurate, especially given the fact that there is no human voice and some of the pieces in our database are really similar. We observe that increasing the length of the excerpt did manage to improve accuracy in the parallel scenario, without incurring much extra time.
