@@ -48,11 +48,12 @@
 
 <p>Here is a quick overview of how Shazam works:
 Any soundtrack is first converted to a 2D map, where the most distinguishable sounds are marked (in the graph below). We use the amplitude of the sound to be the filter, and extract the only time and frequencies of the loudest sounds. This way, the amount of data need to be stored and computed decrease dramatically.
-<img src="files%5Cfp_peaks.png" width="480/">
+<img src="https://github.com/github/training-kit/blob/master/images/professortocat.png" alt="">
+<img src="https://github.com/jack91an/cs205finalproject/blob/master/fp_peaks.png" width="480/">
 To store the reduced data, Shazam utilized a "hash" structure. With a pre-defined "window", Shazam computes the difference between the time a sound occurs and each of the later sound that is included in the window. This sound is thereafter (not uniquely) identified as the combination of the frequencies of the two sounds and the time-offset, which we call the "hash". With storing the time that the first sound occurs as an additional variable, now we can construct a set of (hash, t1) pairs, which should be drastically different between two different songs. This set of hash pairs are the fingerprints.
-<img src="files%5Cfp_hash.png" width="480/">
+<img src="https://github.com/jack91an/cs205finalproject/blob/master/fp_hash.png" width="480/">
 To match a clip to a soundtrack, we would need to generate the fingerprints for botht the clip and the soundtrack. Then the hashes are compared, and due to the fact that the clip may start from the middle of the movie, there is usually a fixed difference in the t1 values of the matched hashes. We put the differences in t1 values into 200 buckets, and the most frequent t1 difference is then identified as the best estimate of when from the movie is the clip being recorded, and the count of the most frequent t1 differences is an idicator of the goddness of match. When this count is compared across all soundtracks that are compared to a clip, the soundtrack with the highest count of same t1 offsets is chosen as our system's best guess of where the clip comes from.
-<img src="files%5Cfp_hist.png" width="480/"></p>
+<img src="https://github.com/jack91an/cs205finalproject/blob/master/fp_hist.png" width="480/"></p>
 
 <h4>
 <a id="data" class="anchor" href="#data" aria-hidden="true"><span class="octicon octicon-link"></span></a>Data</h4>
@@ -69,11 +70,11 @@ To match a clip to a soundtrack, we would need to generate the fingerprints for 
 <h4>
 <a id="performance" class="anchor" href="#performance" aria-hidden="true"><span class="octicon octicon-link"></span></a>Performance</h4>
 
-<p><img src="files%5Cresults.png" width="960/">
+<p><img src="https://github.com/jack91an/cs205finalproject/blob/master/results.png" width="960/">
 We are glad to see that we achieved speedup in both paralellizations.
 1. Make fingerprints with multiprocessing
 By applying multiprocessing, we did accomplish a 2x speedup with 4 cores. This is less than linear, which I think is mainly due to overhead costs. We used htop to ensure that all cores are utilized during the run:
-<img src="files/htop.png"></p>
+<img src="https://github.com/jack91an/cs205finalproject/blob/master/htop.png"></p>
 
 <ol>
 <li>Match hashkeys with OpenCL
