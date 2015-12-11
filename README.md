@@ -16,12 +16,12 @@ We researched multiple ways this matching could be done, and came across a paper
 Shazam paper: http://www.ee.columbia.edu/~dpwe/papers/Wang03-shazam.pdf
 
 Here is a quick overview of how Shazam works:
-Any soundtrack is first converted to a 2D map, where the most distinguishable sounds are marked (in the graph below). We use the amplitude of the sound to be the filter, and extract the only time and frequencies of the loudest sounds. This way, the amount of data need to be stored and computed decrease dramatically.
-<img src="https://github.com/jack91an/cs205finalproject/blob/master/fp_peaks.png" width=480/>
-To store the reduced data, Shazam utilized a "hash" structure. With a pre-defined "window", Shazam computes the difference between the time a sound occurs and each of the later sound that is included in the window. This sound is thereafter (not uniquely) identified as the combination of the frequencies of the two sounds and the time-offset, which we call the "hash". With storing the time that the first sound occurs as an additional variable, now we can construct a set of (hash, t1) pairs, which should be drastically different between two different songs. This set of hash pairs are the fingerprints.
-<img src="https://github.com/jack91an/cs205finalproject/blob/master/fp_hash.png" width=480/>
-To match a clip to a soundtrack, we would need to generate the fingerprints for botht the clip and the soundtrack. Then the hashes are compared, and due to the fact that the clip may start from the middle of the movie, there is usually a fixed difference in the t1 values of the matched hashes. We put the differences in t1 values into 200 buckets, and the most frequent t1 difference is then identified as the best estimate of when from the movie is the clip being recorded, and the count of the most frequent t1 differences is an idicator of the goddness of match. When this count is compared across all soundtracks that are compared to a clip, the soundtrack with the highest count of same t1 offsets is chosen as our system's best guess of where the clip comes from.
-<img src="https://github.com/jack91an/cs205finalproject/blob/master/fp_hist.png" width=480/>
+Any soundtrack is first converted to a 2D map, where the most distinguishable sounds are marked (in the graph below). We use the amplitude of the sound to be the filter, and extract the only time and frequencies of the loudest sounds. This way, the amount of data need to be stored and computed decrease dramatically.\n
+<img src="https://github.com/jack91an/cs205finalproject/blob/master/fp_peaks.png" width=480/> \n
+To store the reduced data, Shazam utilized a "hash" structure. With a pre-defined "window", Shazam computes the difference between the time a sound occurs and each of the later sound that is included in the window. This sound is thereafter (not uniquely) identified as the combination of the frequencies of the two sounds and the time-offset, which we call the "hash". With storing the time that the first sound occurs as an additional variable, now we can construct a set of (hash, t1) pairs, which should be drastically different between two different songs. This set of hash pairs are the fingerprints. \n
+<img src="https://github.com/jack91an/cs205finalproject/blob/master/fp_hash.png" width=480/> \n
+To match a clip to a soundtrack, we would need to generate the fingerprints for botht the clip and the soundtrack. Then the hashes are compared, and due to the fact that the clip may start from the middle of the movie, there is usually a fixed difference in the t1 values of the matched hashes. We put the differences in t1 values into 200 buckets, and the most frequent t1 difference is then identified as the best estimate of when from the movie is the clip being recorded, and the count of the most frequent t1 differences is an idicator of the goddness of match. When this count is compared across all soundtracks that are compared to a clip, the soundtrack with the highest count of same t1 offsets is chosen as our system's best guess of where the clip comes from. \n
+<img src="https://github.com/jack91an/cs205finalproject/blob/master/fp_hist.png" width=480/> \n
 
 ####Data####
 
@@ -35,11 +35,11 @@ This notebook is ready to be run through. Note that I have already put the excer
 
 
 ####Performance####
-<img src="https://github.com/jack91an/cs205finalproject/blob/master/results.png" width=960/>
+<img src="https://github.com/jack91an/cs205finalproject/blob/master/results.png" width=960/> \n
 We are glad to see that we achieved speedup in both paralellizations.
 1. Make fingerprints with multiprocessing
-By applying multiprocessing, we did accomplish a 2x speedup with 4 cores. This is less than linear, which I think is mainly due to overhead costs. We used htop to ensure that all cores are utilized during the run:
-<img src="https://github.com/jack91an/cs205finalproject/blob/master/htop.png"/>
+By applying multiprocessing, we did accomplish a 2x speedup with 4 cores. This is less than linear, which I think is mainly due to overhead costs. We used htop to ensure that all cores are utilized during the run: \n
+<img src="https://github.com/jack91an/cs205finalproject/blob/master/htop.png"/> \n
 
 2. Match hashkeys with OpenCL
 Using OpenCL, the overall time spent on searching 18 excerpts/recordings over 18 original soundtracks decreased slightly (x0.9). We thing the major costs come from arrays and variables being passed into the kernal. However, if we only time the matching process, we achieved significant speedup, at 600-800 times faster, while maintaining similar levels of accuracy. This is exciting, because as the database scale and in the real life when only 1 clip will be searched to much longer soundtracks, the matching process will take up more weight in the computation time, and the soundtracks' fingerprints won't need to be passed into repetively (which seems to be the case here). Therefore, our speedup is very scalable, and we expect the total time to decrease significantly comparing to the serial scenario when the original soundtracks grow much larger.
